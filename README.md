@@ -162,7 +162,7 @@ The `docker-compose.yaml` contains all of the information necessary to deploy a 
 
 You will need to update this file to reflect your docker hub account, repository name and the sha256 hash of your docker image (this is visible in the CLI after you push your build to docker hub).
 
-On Phala Cloud, click on `deploy` then select `from sketch` and click the `advanced` tab. Paste in the `yaml` and give the instance a name. Check resources and deploy.
+On Phala Cloud, click on `deploy` then select `from docker compose` and click the `advanced` tab. Paste in the `yaml` and give the instance a name. Check resources (defaults `prod5`, `dstack-dev-0.3.5`, and `tdx.small` work) and deploy.
 
 That's it!
 
@@ -228,6 +228,16 @@ NEXT_PUBLIC_contractId=dcap.magical-part.testnet
 ```
 
 Your docker build of your NextJS app can target this contract by including the contractId in the Dockerfile.
+
+## KNOWN ISSUE: Contract Build on MacOS
+
+There is an issue with Apple's clang and compiling the `ring` crate.
+
+```
+'No available targets are compatible with triple "wasm32-unknown-unknown"'
+```
+
+If you are building the smart contract on Apple Silicon, see here to resolve: https://github.com/briansmith/ring/issues/1824#issuecomment-2059955073
 
 # Design Patterns for Method Access Control
 
