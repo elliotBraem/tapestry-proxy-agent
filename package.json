@@ -1,5 +1,4 @@
 {
-    "type": "module",
     "private": true,
     "scripts": {
         "test:contract": "cd contract && cargo near build non-reproducible-wasm && cd .. && ava ./tests/test.js --serial --timeout 30s",
@@ -18,6 +17,7 @@
         "@neardefi/shade-agent-js": "^0.0.5",
         "@phala/dcap-qvl-web": "^0.1.0-beta.2",
         "@phala/dstack-sdk": "^0.1.7",
+        "agent-twitter-client": "^0.0.17",
         "dotenv": "^16.4.7",
         "near-api-js": "^5.0.1",
         "near-seed-phrase": "^0.2.1",

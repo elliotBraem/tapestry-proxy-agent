@@ -1,15 +1,17 @@
-import { SearchMode, twitter, generateAddress } from '@neardefi/shade-agent-js';
+import { SearchMode, twitter, bakeCookies } from '../../utils/twitter';
 const replied = [];
 
 export default async function test(req, res) {
-    // Search for recent tweets
-    const results = await twitter.searchTweets(
-        '@shadeagent007 "evm account"',
-        100,
-        SearchMode.Latest,
-    );
+    const tweets = await twitter.searchTweets('elonmusk', 1, SearchMode.Latest);
 
-    const tweets = await Array.fromAsync(results);
+    try {
+        const tweet = await tweets.next();
+        res.status(200).json({ tweet });
+    } catch (e) {
+        console.log(JSON.stringify(e).substring(0, 256));
+    }
+
+    return;
 
     for (const t of tweets) {
         if (replied.includes(t.id)) continue;
