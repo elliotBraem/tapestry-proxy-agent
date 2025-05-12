@@ -239,6 +239,10 @@ There is an issue with Apple's clang and compiling the `ring` crate.
 
 If you are building the smart contract on Apple Silicon, see here to resolve: https://github.com/briansmith/ring/issues/1824#issuecomment-2059955073
 
+And possible this will help:
+
+https://stackoverflow.com/a/73521477
+
 # Design Patterns for Method Access Control
 
 One of the biggest features of the Shade Agent Stack is method access control of the Smart Contract.
