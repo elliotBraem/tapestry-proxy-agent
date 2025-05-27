@@ -84,9 +84,7 @@ near contract call-function as-transaction <contractId> approve_codehash json-ar
 
 - Update your Phala deployment by clicking on the three little dots, clicking update, and pasting your new `docker-compose.yaml` file.
 
-:::tip
 If you have made changes to the agent contract, you will need to redeploy the contract with the new hash. Update [utils/deploy-contract.js](https://github.com/PiVortex/shade-agent-template/blob/main/utils/deploy-contract.js#L9) and run `yarn contract:deploy` or `yarn contract:deploy:mac`.
-:::
 
 ---
 
