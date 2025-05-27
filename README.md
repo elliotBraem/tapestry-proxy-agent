@@ -50,9 +50,7 @@ These set of instructions will guide you to deploy your Shade Agent within a TEE
 
 Now you can interact with the Shade Agent. 
 
-:::tip
 If you are having problems deploying your Docker image to Phala, make sure that your node version in your [Dockerfile](https://github.com/PiVortex/shade-agent-template/blob/main/Dockerfile#L3) matches the one on your machine.
-:::
 
 ### Using the Shade Agent
 
