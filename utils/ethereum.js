@@ -37,7 +37,6 @@ export const ethContractAbi = [
 const MPC_CONTRACT = new contracts.ChainSignatureContract({
   networkId: `testnet`,
   contractId: `v1.signer-prod.testnet`,
-  adapter: chainAdapters.Ethereum,
 });
 
 const publicClient = createPublicClient({
