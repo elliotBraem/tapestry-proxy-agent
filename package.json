@@ -11,8 +11,8 @@
         "port:kill": "sudo fuser -k 3000/tcp",
         "docker:build": "docker buildx build --platform linux/amd64 --no-cache --target prod -t pivortex/shade-agent-template:latest .",
         "docker:run": "sudo docker run --rm -p 3000:3000 pivortex/shade-agent-template:latest",
-        "docker:image": "docker buildx build --platform linux/amd64 --no-cache --target prod -t pivortex/shade-agent-template:latest .",
-        "docker:push": "docker push pivortex/shade-agent-template:latest",
+        "docker:image": "sudo docker build --no-cache --platform=linux/amd64 -t pivortex/my-app:latest .",
+        "docker:push": "docker push pivortex/my-app:latest",
         "docker:prune": "sudo docker system prune",
         "docker:restart": "sudo systemctl restart docker"
     },
