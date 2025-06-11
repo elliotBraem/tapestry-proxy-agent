@@ -40,7 +40,7 @@ RUN \
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV=production
+ENV NODE_ENV=dev
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED=1
 
@@ -71,5 +71,3 @@ FROM runner AS prod
 FROM runner AS dev
 # ENV DSTACK_SIMULATOR_ENDPOINT="http://host.docker.internal:8090"
 ENV DSTACK_SIMULATOR_ENDPOINT="http://172.17.0.1:8090"
-
-

@@ -1,7 +1,28 @@
 services:
-    web:
+    # always have shade-agent-api first in order of services
+    shade-agent-api:
+        environment:
+            NEAR_ACCOUNT_ID: ${NEAR_ACCOUNT_ID}
+            NEAR_SEED_PHRASE: ${NEAR_SEED_PHRASE}
+            API_CODEHASH: ${API_CODEHASH}
+            APP_CODEHASH: ${APP_CODEHASH}
+            ENTROPY: ${ENTROPY}
+            NEXT_PUBLIC_contractId: ${NEXT_PUBLIC_contractId}
+            SHADE_AGENT_PORT: ${SHADE_AGENT_PORT}
         platform: linux/amd64 # Explicitly set for TDX
-        image: pivortex/shade-agent-template:latest@sha256:cd8a76702a3949b31a34333cc3c80f6bfbe0874d301fa8f030eebc1b4d264d9c
+        # shade-agent-api-image
+        image: mattdlockyer/shade-agent-api@sha256:3858c9828e510671d1bc0975d3853087b0aa859260e4c1c7e8b068e57bc0fe70
+        container_name: shade-agent-api
+        ports:
+            - '3140:3140'
+        volumes:
+            - /var/run/tappd.sock:/var/run/tappd.sock
+        restart: always
+    my-app:
+        platform: linux/amd64 # Explicitly set for TDX
+        # shade-agent-app-image
+        image: pivortex/my-app@sha256:357ad93cdff54d5ba310f1f5b87cd925ffb9075c473911c8754deb7bf6fa8e38
+        container_name: my-app
         ports:
             - '3000:3000'
         volumes:
