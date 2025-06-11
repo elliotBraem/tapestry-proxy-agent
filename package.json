@@ -14,7 +14,8 @@
         "docker:image": "sudo docker build --no-cache --platform=linux/amd64 -t pivortex/my-app:latest .",
         "docker:push": "docker push pivortex/my-app:latest",
         "docker:prune": "sudo docker system prune",
-        "docker:restart": "sudo systemctl restart docker"
+        "docker:restart": "sudo systemctl restart docker",
+        "start": "next dev"
     },
     "dependencies": {
         "@ethereumjs/tx": "^5.3.0",
