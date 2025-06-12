@@ -10,7 +10,7 @@ export default async function handler(req, res) {
           );
         res.status(200).json({ senderAddress });
     } catch (error) {
-        console.error('Error getting worker account:', error);
+        console.log('Error getting worker account:', error);
         res.status(500).json({ error: 'Failed to get worker account' });
     }
 } 

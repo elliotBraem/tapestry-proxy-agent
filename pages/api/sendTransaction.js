@@ -25,7 +25,7 @@ export default async function sendTransaction(req, res) {
         console.log('signRes', signRes);
         verified = true;
     } catch (e) {
-        console.error('Contract call error:', e);
+        console.log('Contract call error:', e);
     }
 
     if (!verified) {

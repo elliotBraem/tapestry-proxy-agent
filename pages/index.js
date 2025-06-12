@@ -15,6 +15,7 @@ export default function Home() {
     const [ethBalance, setEthBalance] = useState('0');
     const [contractPrice, setContractPrice] = useState(null);
     const [lastTxHash, setLastTxHash] = useState(null);
+    const [error, setError] = useState('');
 
     const setMessageHide = async (message, dur = 3000, success = false) => {
         setMessage({ text: message, success });
@@ -25,7 +26,8 @@ export default function Home() {
     const getWorkerDetails = async () => {
         const res = await fetch('/api/getWorkerAccount').then((r) => r.json());
         if (res.error) {
-            console.error('Error getting worker account:', res.error);
+            console.log('Error getting worker account:', res.error);
+            setError('Failed to get worker account details');
             return;
         }
         setAccountId(res.accountId);
@@ -35,27 +37,31 @@ export default function Home() {
 
     const getEthInfo = async () => {
         try {
-            const { address } = await Evm.deriveAddressAndPublicKey(
-                contractId,
-                "ethereum-1",
-              );
+            const res = await fetch('/api/getEthAccount').then((r) => r.json());
+            if (res.error) {
+                console.log('Error getting ETH account:', res.error);
+                setError('Failed to get ETH account details');
+                return;
+            }
+            const address = res.senderAddress;
             const balance = await Evm.getBalance(address);
             setEthAddress(address);
             const formattedBalance = convertToDecimal(balance.balance.toString(), balance.decimals);
             setEthBalance(formattedBalance);
         } catch (error) {
-            console.error('Error fetching ETH info:', error);
+            console.log('Error fetching ETH info:', error);
+            setError('Failed to fetch ETH account details');
         }
     };
 
     const getPrice = async () => {
         try {
             const price = await getContractPrice();
-            // Divide by 100 to get the actual price with 2 decimal places
             const displayPrice = (parseInt(price.toString()) / 100).toFixed(2);
             setContractPrice(displayPrice);
         } catch (error) {
-            console.error('Error fetching contract price:', error);
+            console.log('Error fetching contract price:', error);
+            setError('Failed to fetch contract price');
         }
     };
 
@@ -342,6 +348,22 @@ export default function Home() {
                     />
                 </a>
             </footer>
+            {error && (
+                <div style={{
+                    position: 'fixed',
+                    bottom: '20px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    background: '#ff4444',
+                    color: 'white',
+                    padding: '10px 20px',
+                    borderRadius: '5px',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                    zIndex: 1000
+                }}>
+                    {error}
+                </div>
+            )}
         </div>
     );
 }

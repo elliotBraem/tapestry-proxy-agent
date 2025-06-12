@@ -8,7 +8,7 @@ export default async function handler(req, res) {
         console.log('Balance:', balance.available);
         res.status(200).json({ accountId: accountId.workerAccountId, balance: balance.available });
     } catch (error) {
-        console.error('Error getting worker account:', error);
+        console.log('Error getting worker account:', error);
         res.status(500).json({ error: 'Failed to get worker account ' + error });
     }
 } 
