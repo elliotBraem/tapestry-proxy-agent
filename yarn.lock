@@ -26,10 +26,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chain-registry/types@npm:^0.50.151":
-  version: 0.50.151
-  resolution: "@chain-registry/types@npm:0.50.151"
-  checksum: 10c0/b88d4a9acd69a302b625b9d005bdf3d59fd6f16febd367e1b5bbec34089f67422655fcefcac067e6a551a8ef7a33003606e4ca20fb142929988d2b0056cae238
+"@chain-registry/types@npm:^0.50.152":
+  version: 0.50.152
+  resolution: "@chain-registry/types@npm:0.50.152"
+  checksum: 10c0/81e40ceb6b77eb7a66342caa32aedbe5bc394fad698a753323888dc258c38d3079b5fba13f3e2dc54087db3a7e017b4c346029eca5bcd4b0150b0a75bc2b1d02
   languageName: node
   linkType: hard
 
@@ -1122,11 +1122,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:>=13.7.0":
-  version: 24.0.0
-  resolution: "@types/node@npm:24.0.0"
+  version: 24.0.1
+  resolution: "@types/node@npm:24.0.1"
   dependencies:
     undici-types: "npm:~7.8.0"
-  checksum: 10c0/075f3129aa88932a0b4c3c9c28486f93a8d295151138b1fdd590cbbb59ec92d59b66201f99a0f061a7c8955a09d06ecc3fa070ed3c438a521a9890d1a3460958
+  checksum: 10c0/91cd50d1ac32a2172cbc67b65c78391fbd469b24743e3665427aa60bebaf4620cb9ac2e91c09a8081a78d08855c00faca659c287c1725ce8ca5e80ece3a20520
   languageName: node
   linkType: hard
 
@@ -1772,11 +1772,11 @@ __metadata:
   linkType: hard
 
 "chain-registry@npm:^1.69.72":
-  version: 1.69.242
-  resolution: "chain-registry@npm:1.69.242"
+  version: 1.69.243
+  resolution: "chain-registry@npm:1.69.243"
   dependencies:
-    "@chain-registry/types": "npm:^0.50.151"
-  checksum: 10c0/a7d9e22d7eff5f221574975a957bd148f1da9f1e6144af7b1f597b6d09d8ddef299dcfae71102c578a2951885b1c9f74fea93e602cec179b1e4baaacf0a1e51b
+    "@chain-registry/types": "npm:^0.50.152"
+  checksum: 10c0/5abca088163f022994e8ffe725ede4fbb032579f4ae4630a237641da0fdb7358b5bf41de423ec96db8ddf7372294b999898fbfb45b8254923741d1a082e08292
   languageName: node
   linkType: hard
 
@@ -5301,8 +5301,8 @@ __metadata:
   linkType: hard
 
 "zod@npm:^3.21.4":
-  version: 3.25.61
-  resolution: "zod@npm:3.25.61"
-  checksum: 10c0/45386e88c52b5946dbe22c95fe45f3e7c1c90c4fba8cd7b8ce4e6cf0a79c987026990cbb082c54bb2926be35ed49947f351f05b35d6507aa17c23c088a5f4667
+  version: 3.25.63
+  resolution: "zod@npm:3.25.63"
+  checksum: 10c0/ce09c6ae327a66629e67340856ec19b6b4ba2c28691a2de1e618a5cc717685c2b4e9baa370cf81c34f453fc652733ecfc9a7d5d966570a22472999931abd5ada
   languageName: node
   linkType: hard
