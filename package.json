@@ -18,20 +18,12 @@
         "start": "next dev"
     },
     "dependencies": {
-        "@ethereumjs/tx": "^5.3.0",
-        "@ethereumjs/util": "^9.0.3",
-        "@hono/node-server": "^1.14.2",
         "@neardefi/shade-agent-js": "^0.1.4",
         "assert": "^2.1.0",
         "chainsig.js": "1.1.6",
         "dotenv": "^16.5.0",
-        "elliptic": "^6.5.5",
         "ethers": "^6.11.1",
-        "hono": "^4.7.10",
         "https-browserify": "^1.0.0",
-        "js-sha3": "^0.9.3",
-        "near-api-js": "^5.0.1",
-        "near-seed-phrase": "^0.2.1",
         "next": "latest",
         "os-browserify": "^0.3.0",
         "path-browserify": "^1.0.1",
@@ -40,8 +32,7 @@
         "stream-browserify": "^3.0.0",
         "stream-http": "^3.2.0",
         "url": "^0.11.4",
-        "viem": "^2.28.1",
-        "web3": "^4.6.0"
+        "viem": "^2.28.1"
     },
     "devDependencies": {
         "ava": "^6.1.3",
