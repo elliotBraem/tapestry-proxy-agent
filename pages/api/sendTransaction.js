@@ -1,4 +1,4 @@
-import { signWithWorker } from '@neardefi/shade-agent-js';
+import { signWithAgent } from '@neardefi/shade-agent-js';
 import { ethContractAbi, ethContractAddress, ethRpcUrl, Evm } from '../../utils/ethereum';
 import { getEthereumPriceUSD } from '../../utils/fetch-eth-price';
 import { Contract, JsonRpcProvider } from "ethers";
@@ -21,7 +21,7 @@ export default async function sendTransaction(req, res) {
     const path = 'ethereum-1';
     const payload = hashesToSign[0];
     try {
-        signRes = await signWithWorker(path, payload);
+        signRes = await signWithAgent(path, payload);
         console.log('signRes', signRes);
         verified = true;
     } catch (e) {

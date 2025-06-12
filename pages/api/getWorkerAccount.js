@@ -1,8 +1,8 @@
-import { getWorkerAccount, getBalance } from '@neardefi/shade-agent-js';
+import { getAgentAccount, getBalance } from '@neardefi/shade-agent-js';
 
 export default async function handler(req, res) {
     try {
-        const accountId = await getWorkerAccount();
+        const accountId = await getAgentAccount();
         console.log('Worker account:', accountId.workerAccountId);
         const balance = await getBalance(accountId.workerAccountId);
         console.log('Balance:', balance.available);

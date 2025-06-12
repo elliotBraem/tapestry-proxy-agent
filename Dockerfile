@@ -24,7 +24,7 @@ USER node
 # Expose application port
 EXPOSE 3000
 
-ENV NODE_ENV="dev"
+ENV NODE_ENV=development
 
 # Start command
 CMD ["yarn", "start"]

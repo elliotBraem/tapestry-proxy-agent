@@ -11,7 +11,7 @@ services:
             SHADE_AGENT_PORT: ${SHADE_AGENT_PORT}
         platform: linux/amd64 # Explicitly set for TDX
         # shade-agent-api-image
-        image: mattdlockyer/shade-agent-api@sha256:3858c9828e510671d1bc0975d3853087b0aa859260e4c1c7e8b068e57bc0fe70
+        image: mattdlockyer/shade-agent-api@sha256:986548e2bb6303c377aa92f6696b0024662fcb99d2dfacb7eb5cc0dbf48325d6
         container_name: shade-agent-api
         ports:
             - '3140:3140'
@@ -21,7 +21,7 @@ services:
     my-app:
         platform: linux/amd64 # Explicitly set for TDX
         # shade-agent-app-image
-        image: pivortex/my-app@sha256:b3eee177fcdcd374f1e98ae8da7b6db31451b7f56ed3c59351734852d1158c5b
+        image: pivortex/my-app@sha256:d511d3d7c0a422eac714183153430360a84476d273b7f32540b0ad040f48317c
         container_name: my-app
         ports:
             - '3000:3000'

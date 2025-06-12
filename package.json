@@ -1,24 +1,16 @@
 {
     "private": true,
     "scripts": {
-        "test:contract": "ava ./tests/test.js --serial --timeout 30s",
-        "contract:deploy": "cd contract && cargo near build non-reproducible-wasm && cd .. && node utils/deploy-contract.js",
-        "contract:deploy:mac": "docker run --rm -it -v $(pwd):/code -w /code/contract rust:1.86.0 bash -c 'apt-get update && apt-get install -y clang llvm build-essential libudev-dev pkg-config && rustup target add wasm32-unknown-unknown && cargo install cargo-near && cargo near build non-reproducible-wasm' && node utils/deploy-contract.js",
-        "contract:just-deploy": "node utils/deploy-contract.js",
         "dev": "next dev",
-        "build": "next build",
-        "tappd:run": "sudo docker run --rm -p 8090:8090 phalanetwork/tappd-simulator:latest",
-        "port:kill": "sudo fuser -k 3000/tcp",
-        "docker:build": "docker buildx build --platform linux/amd64 --no-cache --target prod -t pivortex/shade-agent-template:latest .",
-        "docker:run": "sudo docker run --rm -p 3000:3000 pivortex/shade-agent-template:latest",
-        "docker:image": "sudo docker build --no-cache --platform=linux/amd64 -t pivortex/my-app:latest .",
-        "docker:push": "docker push pivortex/my-app:latest",
+        "start": "next dev",
+        "phala:test": "phala cvms create --name my-app --compose ./docker-compose.yaml --env-file ./.env.development.local",
+        "docker:test": "sudo docker build -t myapp . && sudo docker run -p 3000:3000 --env-file .env.development.local --rm -e PORT=3000 myapp",
         "docker:prune": "sudo docker system prune",
-        "docker:restart": "sudo systemctl restart docker",
-        "start": "next dev"
+        "docker:image": "sudo docker build --no-cache --platform linux/amd64 -t pivortex/my-app:latest .",
+        "docker:push": "sudo docker push pivortex/my-app"
     },
     "dependencies": {
-        "@neardefi/shade-agent-js": "^0.1.4",
+        "@neardefi/shade-agent-js": "^0.2.0",
         "assert": "^2.1.0",
         "chainsig.js": "1.1.6",
         "dotenv": "^16.5.0",
