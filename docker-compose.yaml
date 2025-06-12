@@ -11,18 +11,18 @@ services:
             SHADE_AGENT_PORT: ${SHADE_AGENT_PORT}
         platform: linux/amd64 # Explicitly set for TDX
         # shade-agent-api-image
-        image: mattdlockyer/shade-agent-api@sha256:986548e2bb6303c377aa92f6696b0024662fcb99d2dfacb7eb5cc0dbf48325d6
+        image: mattdlockyer/shade-agent-api@sha256:1c6144e3451454ea8f717b0928e6fe5055f5342e48b6b29bc61e36ab3c8ba6bf
         container_name: shade-agent-api
         ports:
-            - '3140:3140'
+            - "3140:3140"
         volumes:
             - /var/run/tappd.sock:/var/run/tappd.sock
         restart: always
-    my-app:
+    shade-agent-api-test:
         platform: linux/amd64 # Explicitly set for TDX
         # shade-agent-app-image
-        image: pivortex/my-app@sha256:d511d3d7c0a422eac714183153430360a84476d273b7f32540b0ad040f48317c
-        container_name: my-app
+        image: pivortex/my-app@sha256:d0e7f9bbf184affb7c4a96070c5ccaf0a172e51fef59f9f3baf5045f6e2fa305
+        container_name: shade-agent-api-test
         ports:
             - '3000:3000'
         volumes:
