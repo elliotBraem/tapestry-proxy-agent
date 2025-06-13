@@ -18,9 +18,9 @@ export default async function sendTransaction(req, res) {
     let signRes;
     let verified = false;
     // Call the agent contract to get a signature for the payload
-    const path = 'ethereum-1';
-    const payload = hashesToSign[0];
     try {
+        const path = 'ethereum-1';
+        const payload = hashesToSign[0];
         signRes = await signWithAgent(path, payload);
         console.log('signRes', signRes);
         verified = true;
