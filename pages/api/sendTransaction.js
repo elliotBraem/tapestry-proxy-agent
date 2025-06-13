@@ -45,7 +45,7 @@ export default async function sendTransaction(req, res) {
     // Send back both the txHash and the new price optimistically
     res.status(200).json({ 
         txHash: txHash.hash,
-        newPrice: (ethPrice / 100).toFixed(2) // Format the price the same way as in getPrice
+        newPrice: (ethPrice / 100).toFixed(2) 
     });
 }
 
