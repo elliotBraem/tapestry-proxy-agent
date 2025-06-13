@@ -10,7 +10,7 @@
         "docker:push": "sudo docker push pivortex/my-app"
     },
     "dependencies": {
-        "@neardefi/shade-agent-js": "^0.2.0",
+        "@neardefi/shade-agent-js": "^0.2.1",
         "assert": "^2.1.0",
         "chainsig.js": "1.1.6",
         "dotenv": "^16.5.0",
