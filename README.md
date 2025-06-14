@@ -55,19 +55,19 @@ Phala Cloud is a service that offers secure and private hosting in a TEE using [
 
 - Start up Docker:
 
-Linux
+For Linux
 
-    ```bash
-    sudo systemctl start docker
-    ```
+```bash
+sudo systemctl start docker
+```
 
-Mac
+For Mac
 
-    Simply open the Docker Desktop application or run: 
+Simply open the Docker Desktop application or run: 
 
-    ```bash
-    open -a Docker
-    ```
+```bash
+open -a Docker
+```
 
 - Make sure the `NEXT_PUBLIC_contractId` prefix is set to `ac.proxy.` followed by your NEAR accountId.
 
