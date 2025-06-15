@@ -82,6 +82,7 @@ The CLI will prompt you to enter your `sudo password`.
 - In another terminal, start the frontend :
 
 ```bash
+yarn
 yarn start
 ```
 
