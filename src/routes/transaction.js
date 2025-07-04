@@ -1,19 +1,22 @@
+import { Hono } from 'hono';
 import { signWithAgent } from '@neardefi/shade-agent-js';
-import { ethContractAbi, ethContractAddress, ethRpcUrl, Evm } from '../../utils/ethereum';
-import { getEthereumPriceUSD } from '../../utils/fetch-eth-price';
+import { ethContractAbi, ethContractAddress, ethRpcUrl, Evm } from '../utils/ethereum.js';
+import { getEthereumPriceUSD } from '../utils/fetch-eth-price.js';
 import { Contract, JsonRpcProvider } from "ethers";
 import { utils } from 'chainsig.js';
 const { toRSV } = utils.cryptography;
 
 const contractId = process.env.NEXT_PUBLIC_contractId;
 
-export default async function sendTransaction(req, res) {
+const app = new Hono();
 
-  // Get the ETH price
-  const ethPrice = await getEthereumPriceUSD();
+app.post('/', async (c) => {
+  try {
+    // Get the ETH price
+    const ethPrice = await getEthereumPriceUSD();
 
-  // Get the transaction and payload to sign
-  const { transaction, hashesToSign} = await getPricePayload(ethPrice);
+    // Get the transaction and payload to sign
+    const { transaction, hashesToSign} = await getPricePayload(ethPrice);
 
     let signRes;
     let verified = false;
@@ -29,8 +32,7 @@ export default async function sendTransaction(req, res) {
     }
 
     if (!verified) {
-        res.status(400).json({ verified, error: 'Failed to send price' });
-        return;
+        return c.json({ verified, error: 'Failed to send price' }, 400);
     }
 
     // Reconstruct the signed transaction
@@ -43,11 +45,15 @@ export default async function sendTransaction(req, res) {
     const txHash = await Evm.broadcastTx(signedTransaction);
     
     // Send back both the txHash and the new price optimistically
-    res.status(200).json({ 
+    return c.json({ 
         txHash: txHash.hash,
         newPrice: (ethPrice / 100).toFixed(2) 
     });
-}
+  } catch (error) {
+    console.error('Error in sendTransaction:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
 
 async function getPricePayload(ethPrice) {
   const { address: senderAddress } = await Evm.deriveAddressAndPublicKey(
@@ -65,3 +71,5 @@ async function getPricePayload(ethPrice) {
 
   return {transaction, hashesToSign};
 }
+
+export default app;
