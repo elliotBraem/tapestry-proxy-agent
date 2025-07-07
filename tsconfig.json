@@ -1,16 +1,27 @@
 {
-    "compilerOptions": {
-      "target": "ES2020",
-      "module": "CommonJS",
-      "moduleResolution": "node",
-      "strict": true,
-      "esModuleInterop": true,
-      "allowSyntheticDefaultImports": true,
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true,
-      "resolveJsonModule": true
-    },
-    "ts-node": {
-      "esm": false
-    }
-  } 
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+    "allowJs": true,
+
+    // Bundler mode (bun)
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+
+    // Best practices
+    "strict": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // Some stricter flags (disabled by default)
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "types": ["bun-types"]
+  }
+}

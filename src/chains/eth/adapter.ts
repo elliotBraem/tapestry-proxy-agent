@@ -1,6 +1,7 @@
 import { contracts, chainAdapters } from "chainsig.js";
 import { createPublicClient, http } from "viem";
 import { Contract, JsonRpcProvider } from "ethers";
+import type { ChainAdapter } from "../types";
 
 export const ethRpcUrl = 'https://sepolia.drpc.org';
 export const ethContractAddress = '0xb8d9b079F1604e9016137511464A1Fe97F8e2Bd8';
@@ -32,7 +33,7 @@ export const ethContractAbi = [
     "stateMutability": "view",
     "type": "function"
   }
-]  
+]
 
 const MPC_CONTRACT = new contracts.ChainSignatureContract({
   networkId: `testnet`,
@@ -43,7 +44,7 @@ const publicClient = createPublicClient({
     transport: http(ethRpcUrl),
   });
 
-export const Evm = (new chainAdapters.evm.EVM({
+const Evm = (new chainAdapters.evm.EVM({
     publicClient,
     contract: MPC_CONTRACT
 }));
@@ -51,20 +52,36 @@ export const Evm = (new chainAdapters.evm.EVM({
 const provider = new JsonRpcProvider(ethRpcUrl);
 const contract = new Contract(ethContractAddress, ethContractAbi, provider);
 
-export async function getContractPrice() {
-  return await contract.getPrice();
-}
-
-export function convertToDecimal(bigIntValue, decimals, decimalPlaces = 6) {
-  let strValue = bigIntValue.toString();
-  
-  if (strValue.length <= decimals) {
-    strValue = strValue.padStart(decimals + 1, '0');
+class EthAdapter implements ChainAdapter {
+  async deriveAddress(path: string): Promise<{ address: string; }> {
+    const contractId = process.env.NEXT_PUBLIC_contractId;
+    if (!contractId) {
+      throw new Error("NEXT_PUBLIC_contractId not set");
+    }
+    const { address } = await Evm.deriveAddressAndPublicKey(
+      contractId,
+      path,
+    );
+    return { address };
   }
 
-  const decimalPos = strValue.length - decimals;
+  async prepareTransaction(from: string, to: string, data: any): Promise<{ transaction: any; hashesToSign: any[]; }> {
+    const { transaction, hashesToSign } = await Evm.prepareTransactionForSigning({
+      from: from as `0x${string}`,
+      to: to as `0x${string}`,
+      data,
+    });
+    return { transaction, hashesToSign };
+  }
 
-  const result = strValue.slice(0, decimalPos) + '.' + strValue.slice(decimalPos);
+  async broadcastTransaction(signedTransaction: any): Promise<{ txHash: string; }> {
+    const txHash = await Evm.broadcastTx(signedTransaction);
+    return { txHash: txHash.hash };
+  }
 
-  return parseFloat(result).toFixed(decimalPlaces);
+  async getContractPrice() {
+    return await contract.getPrice();
+  }
 }
+
+export const ethAdapter = new EthAdapter();

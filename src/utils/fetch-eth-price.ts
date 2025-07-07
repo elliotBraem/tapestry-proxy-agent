@@ -1,10 +1,20 @@
-async function getETHPriceFromBinance() {
+interface BinanceTicker {
+    price: string;
+}
+
+interface CoinbasePrice {
+    data: {
+        amount: string;
+    };
+}
+
+async function getETHPriceFromBinance(): Promise<number | null> {
     try {
         const response = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT');
         if (!response.ok) {
             throw new Error(`Binance API error: ${response.status}`);
         }
-        const data = await response.json();
+        const data: BinanceTicker = await response.json();
         const price = parseFloat(data.price);
         console.log(`Binance ETH Price: $${price}`);
         return price;
@@ -14,13 +24,13 @@ async function getETHPriceFromBinance() {
     }
 }
 
-async function getETHPriceFromCoinbase() {
+async function getETHPriceFromCoinbase(): Promise<number | null> {
     try {
         const response = await fetch('https://api.coinbase.com/v2/prices/ETH-USD/spot');
         if (!response.ok) {
             throw new Error(`Coinbase API error: ${response.status}`);
         }
-        const data = await response.json();
+        const data: CoinbasePrice = await response.json();
         const price = parseFloat(data.data.amount);
         console.log(`Coinbase ETH Price: $${price}`);
         return price;
@@ -30,7 +40,7 @@ async function getETHPriceFromCoinbase() {
     }
 }
 
-export async function getEthereumPriceUSD() {
+export async function getEthereumPriceUSD(): Promise<number | null> {
     try {
         // Fetch from both sources
         const [binancePrice, coinbasePrice] = await Promise.all([
@@ -38,22 +48,21 @@ export async function getEthereumPriceUSD() {
             getETHPriceFromCoinbase()
         ]);
 
-        // If either price is null, use the other one
-        if (binancePrice === null && coinbasePrice === null) {
-            throw new Error('Failed to fetch price from both sources');
-        }
-        if (binancePrice === null) return Math.round(coinbasePrice * 100);
-        if (coinbasePrice === null) return Math.round(binancePrice * 100);
+        const validPrices = [binancePrice, coinbasePrice].filter((p): p is number => p !== null);
 
-        // Calculate average, multiply by 100 and round to integer
-        const averagePrice = Math.round(((binancePrice + coinbasePrice) / 2) * 100);
+        if (validPrices.length === 0) {
+            console.error('Failed to fetch price from all sources');
+            return null;
+        }
+
+        // Calculate average: sum up, multiply by 100 and round to integer
+        const averagePrice = validPrices.reduce((sum, price) => sum + price, 0) / validPrices.length;
+        const finalPrice = Math.round(averagePrice * 100);
         
-        console.log(`Average ETH Price: $${(averagePrice/100).toFixed(2)} (Binance: $${binancePrice}, Coinbase: $${coinbasePrice})`);
-        return averagePrice;
+        console.log(`Average ETH Price: $${(finalPrice/100).toFixed(2)} (Binance: $${binancePrice ?? 'N/A'}, Coinbase: $${coinbasePrice ?? 'N/A'})`);
+        return finalPrice;
     } catch (error) {
         console.error('Error fetching Ethereum price:', error);
         return null;
     }
 }
-  
-  

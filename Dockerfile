@@ -1,30 +1,23 @@
-# Use official Node 20 Alpine image
-FROM node:20-alpine
-
-# Enable Yarn 4+ corepack
-RUN corepack enable
+FROM oven/bun:latest
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files first for optimal caching
-COPY package.json yarn.lock .yarnrc.yml ./
+# Copy package files
+COPY package.json bun.lockb ./
 
-# Install production dependencies (Yarn 4+)
-COPY .yarn ./.yarn
-RUN yarn install
+# Install dependencies
+RUN bun install --frozen-lockfile
 
-# Copy application files
+# Copy the rest of the application code
 COPY . .
 
 # Set non-root user for security
-RUN chown -R node:node /app
-USER node
+RUN chown -R bun:bun /app
+USER bun
 
 # Expose application port
-EXPOSE 3000
-
-ENV NODE_ENV=development
+EXPOSE 3000/tcp
 
 # Start command
-CMD ["yarn", "start"]
+CMD ["bun", "run", "src/index.ts"]
