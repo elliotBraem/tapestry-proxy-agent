@@ -9,6 +9,8 @@ services:
             ENTROPY: ${ENTROPY}
             NEXT_PUBLIC_contractId: ${NEXT_PUBLIC_contractId}
             SHADE_AGENT_PORT: ${SHADE_AGENT_PORT}
+            INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+            PUBLIC_NETWORK: ${PUBLIC_NETWORK}
         platform: linux/amd64 # Explicitly set for TDX
         # shade-agent-api-image
         image: mattdlockyer/shade-agent-api@sha256:ec43db0f65f8e05937df2a5810931e6d9f491c5df34013b8f9838129c32a3fcf
@@ -20,10 +22,26 @@ services:
     shade-agent-api-test:
         platform: linux/amd64 # Explicitly set for TDX
         # shade-agent-app-image
-        image: elliotbraem/sign-verify-agent@sha256:86263eaca27cd32210017a0ca009593fe60cfb682bf6ef93d6906b4b6fa8d84b
+        image: elliotbraem/sign-verify-agent@sha256:c0080e59b9e1b626f038d0c4cf5280e4d7996852228915490733df1ef38515d1
         container_name: shade-agent-api-test
         ports:
             - '3000:3000'
         volumes:
             - /var/run/tappd.sock:/var/run/tappd.sock
         restart: always
+    dstack-ingress:
+        image: kvin/dstack-ingress@sha256:0f9d97aee13764895f967a00874418330a56e20cf4b0a4c2700934c5755b3350
+        ports:
+        - "443:443"
+        environment:
+            CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN}
+            DOMAIN: ${DOMAIN}
+            GATEWAY_DOMAIN: ${GATEWAY_DOMAIN}
+            CERTBOT_EMAIL: ${CERTBOT_EMAIL}
+            SET_CAA: true
+        volumes:
+            - /var/run/tappd.sock:/var/run/tappd.sock
+            - cert-data:/etc/letsencrypt
+        restart: unless-stopped
+        depends_on:
+            - shade-agent-api
