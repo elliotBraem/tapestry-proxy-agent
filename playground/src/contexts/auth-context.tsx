@@ -16,11 +16,11 @@ import { near } from "../lib/near";
 interface IAuthContext {
   currentAccountId: string | null;
   isSignedIn: boolean;
-  isAuthorized: boolean;
+  // isAuthorized: boolean;
   handleSignIn: () => Promise<void>;
   handleSignOut: () => Promise<void>;
-  handleAuthorize: () => Promise<void>;
-  checkAuthorization: () => Promise<void>;
+  // handleAuthorize: () => Promise<void>;
+  // checkAuthorization: () => Promise<void>;
 }
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
@@ -53,44 +53,44 @@ export function AuthProvider({
   const [recipient, setRecipient] = useState<string | null>(null);
   const hasShownConnectedToast = useRef(false);
 
-  useEffect(() => {
-    if (isAuthorized) {
-      localStorage.setItem("isAuthorized", "true");
-    } else {
-      localStorage.removeItem("isAuthorized");
-    }
-  }, [isAuthorized]);
+  // useEffect(() => {
+  //   if (isAuthorized) {
+  //     localStorage.setItem("isAuthorized", "true");
+  //   } else {
+  //     localStorage.removeItem("isAuthorized");
+  //   }
+  // }, [isAuthorized]);
 
-  const checkAuthorization = useCallback(async () => {
-    if (!currentAccountId) {
-      setIsAuthorized(false);
-      return;
-    }
-    try {
-      await apiClient.makeRequest("GET", "/users/me");
-      setIsAuthorized(true);
-    } catch (error) {
-      console.error("Authorization check failed:", error);
-      setIsAuthorized(false);
-    }
-  }, [currentAccountId]);
+  // const checkAuthorization = useCallback(async () => {
+  //   if (!currentAccountId) {
+  //     setIsAuthorized(false);
+  //     return;
+  //   }
+  //   try {
+  //     await apiClient.makeRequest("GET", "/users/me");
+  //     setIsAuthorized(true);
+  //   } catch (error) {
+  //     console.error("Authorization check failed:", error);
+  //     setIsAuthorized(false);
+  //   }
+  // }, [currentAccountId]);
 
-  const initiateLogin = useCallback(async (accountId: string) => {
-    try {
-      const { nonce, recipient } = await apiClient.makeRequest<{
-        nonce: string;
-        recipient: string;
-      }>("POST", "/auth/initiate-login", { accountId });
-      setNonce(nonce);
-      setRecipient(recipient);
-    } catch (error) {
-      console.error("Failed to initiate login:", error);
-      toast.error("Connection Error", {
-        description:
-          "Unable to connect to authentication server. Please try again.",
-      });
-    }
-  }, []);
+  // const initiateLogin = useCallback(async (accountId: string) => {
+  //   try {
+  //     const { nonce, recipient } = await apiClient.makeRequest<{
+  //       nonce: string;
+  //       recipient: string;
+  //     }>("POST", "/auth/initiate-login", { accountId });
+  //     setNonce(nonce);
+  //     setRecipient(recipient);
+  //   } catch (error) {
+  //     console.error("Failed to initiate login:", error);
+  //     toast.error("Connection Error", {
+  //       description:
+  //         "Unable to connect to authentication server. Please try again.",
+  //     });
+  //   }
+  // }, []);
 
   useEffect(() => {
     const handleAccountChange = (newAccountId: string | null) => {
@@ -130,7 +130,10 @@ export function AuthProvider({
       // checkAuthorization();
       // initiateLogin(currentAccountId);
     }
-  }, [currentAccountId, isAuthorized, checkAuthorization, initiateLogin]);
+  }, [currentAccountId, isAuthorized, 
+    // checkAuthorization,
+    //  initiateLogin
+    ]);
 
   const handleSignIn = async (): Promise<void> => {
     try {
@@ -198,11 +201,11 @@ export function AuthProvider({
   const contextValue: IAuthContext = {
     currentAccountId,
     isSignedIn,
-    isAuthorized,
+    // isAuthorized,
     handleSignIn,
     handleSignOut,
-    handleAuthorize,
-    checkAuthorization,
+    // handleAuthorize,
+    // checkAuthorization,
   };
 
   return (

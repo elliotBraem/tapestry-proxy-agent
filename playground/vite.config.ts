@@ -25,8 +25,8 @@ export default defineConfig(({ mode }) => {
       proxy: {
         '/api': {
           // How can this be set from the params?
-          // target: 'https://b03b31d299edcd4611f45a3ea6b691089d6546b2-3000.dstack-prod8.phala.network',
-          target: 'http://localhost:3000',
+          target: 'https://c5078a7bdcb4c9610f058db31a709990c85760a4-3000.dstack-prod8.phala.network',
+          // target: 'http://localhost:3000',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, '')
         },
