@@ -1,9 +1,8 @@
 # Tapestry Proxy Agent
 
-> [!WARNING]  
-> This technology has not yet undergone a formal audit. Use at your own risk. Please conduct your own due diligence and exercise caution before integrating or relying on it in production environments.
+A TEE proxy server for NEAR signature verification and MPC account management (use the [Tapestry SDK](https://docs.usetapestry.dev/) with a NEAR wallet).
 
-This repository contains a [proxy server](./src/index.ts) designed for deployment to a Trusted Execution Environment (TEE). The server accepts NEAR signatures from the [playground UI](./playground/), verifies them using [near-sign-verify](https://github.com/elliotBraem/near-sign-verify) on the proxy server, and subsequently creates & manages a Solana account controlled by Multi-Party Computation (MPC), on order to leverage the [Tapestry SDK](https://docs.usetapestry.dev/).
+The server accepts [NEP-413](https://github.com/near/NEPs/blob/master/neps/nep-0413.md?plain=1) signed messages from the [playground UI](./playground/), verifies them using [near-sign-verify](https://github.com/elliotBraem/near-sign-verify) on the proxy server, and subsequently creates & manages a Solana account controlled by Multi-Party Computation (MPC), in order to leverage the [Tapestry SDK](https://docs.usetapestry.dev/).
 
 This implementation is an extension of the [Shade Agent Sandbox](https://docs.near.org/ai/shade-agents/sandbox/sandbox-deploying).
 
