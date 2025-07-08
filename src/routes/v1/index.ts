@@ -2,9 +2,14 @@ import { Hono } from 'hono';
 import transactions from './transactions';
 import worker from './worker';
 
-const app = new Hono();
+export type Variables = {
+  accountId: string,
+};
 
-app.route('/transactions', transactions);
-app.route('/worker', worker);
+const protectedRoutes = new Hono<{ Variables: Variables }>();
+protectedRoutes.route('/transactions', transactions);
 
-export default app;
+const publicRoutes = new Hono();
+publicRoutes.route('/worker', worker);
+
+export { protectedRoutes, publicRoutes };

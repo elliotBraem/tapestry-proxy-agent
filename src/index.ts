@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { Hono } from 'hono';
 import { logger } from 'hono/logger';
 import { verify } from 'near-sign-verify';
-import v1 from './routes/v1';
+import { protectedRoutes, publicRoutes } from './routes/v1';
 
 type Variables = {
   accountId: string,
@@ -12,8 +12,7 @@ const app = new Hono<{ Variables: Variables }>();
 
 app.use('*', logger());
 
-// protect transaction routes with a valid near signature
-app.use('/v1/transactions/*', async (c, next) => {
+protectedRoutes.use('*', async (c, next) => {
   const authHeader = c.req.header('Authorization');
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return c.json({ error: 'Unauthorized' }, 401);
@@ -23,7 +22,7 @@ app.use('/v1/transactions/*', async (c, next) => {
 
   try {
     const result = await verify(authToken, {
-      expectedRecipient: 'your-service.near',
+      expectedRecipient: process.env.NEXT_PUBLIC_contractId,
       nonceMaxAge: 300000,
     });
 
@@ -37,7 +36,8 @@ app.use('/v1/transactions/*', async (c, next) => {
   await next();
 });
 
-app.route('/v1', v1);
+app.route('/v1', publicRoutes);
+app.route('/v1', protectedRoutes);
 
 app.get('/', (c) => {
   return c.text(`Shade Agent: ${process.env.NEXT_PUBLIC_contractId}`);

@@ -2,14 +2,19 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "init": "npm-run-all --serial init:*",
+    "init:backend": "bun install",
+    "init:playground": "cd playground && bun install",
+    "init:docker": "shade-agent-cli",
     "dev": "npm-run-all --parallel dev:*",
     "dev:backend": "bun --watch src/index.ts",
     "dev:playground": "cd playground && bun run dev",
     "start": "bun src/index.ts",
+    "deploy": "shade-agent-cli",
     "docker:test": "sudo docker build -t myapp . && sudo docker run -p 3000:3000 --env-file .env.development.local --rm -e PORT=3000 myapp",
     "docker:prune": "sudo docker system prune",
-    "docker:image": "sudo docker build --no-cache --platform linux/amd64 -t pivortex/my-app:latest .",
-    "docker:push": "sudo docker push pivortex/my-app"
+    "docker:image": "sudo docker build --no-cache --platform linux/amd64 -t elliotbraem/sign-verify-agent:latest .",
+    "docker:push": "sudo docker push elliotbraem/sign-verify-agent"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.7.0",
@@ -22,6 +27,7 @@
     "zod": "^3.25.75"
   },
   "devDependencies": {
+    "@neardefi/shade-agent-cli": "^0.0.6",
     "@types/node": "^24.0.10",
     "bun-types": "^1.2.18",
     "npm-run-all": "^4.1.5",

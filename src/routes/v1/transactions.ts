@@ -4,10 +4,11 @@ import { utils } from 'chainsig.js';
 import { Hono } from 'hono';
 import { z } from 'zod';
 import { getChainAdapter } from '../../chains';
+import type { Variables } from '.';
 
 const { toRSV } = utils.cryptography;
 
-const app = new Hono();
+const app = new Hono<{ Variables: Variables }>();
 
 const schema = z.object({
   to: z.string(),
@@ -17,6 +18,7 @@ const schema = z.object({
 app.post('/:chain/transaction', zValidator('json', schema), async (c) => {
   const { chain } = c.req.param();
   const { to, data } = c.req.valid('json');
+  const accountId = c.get('accountId');
 
   if (chain !== 'eth' && chain !== 'sui') {
     return c.json({ error: 'Invalid chain' }, 400);
@@ -24,14 +26,14 @@ app.post('/:chain/transaction', zValidator('json', schema), async (c) => {
 
   try {
     const adapter = getChainAdapter(chain);
-    const { address: from } = await adapter.deriveAddress(`${chain}-1`);
+    const { address: from } = await adapter.deriveAddress(`${accountId}-${chain}-1`);
 
     const { transaction, hashesToSign } = await adapter.prepareTransaction(from, to, data);
 
     let signRes;
     let verified = false;
     try {
-      const path = `${chain}-1`;
+      const path = `${accountId}-${chain}-1`;
       const payload = hashesToSign[0];
       signRes = await signWithAgent(path, payload);
       verified = true;

@@ -1,5 +1,5 @@
-import { Hono } from 'hono';
 import { getAgentAccount, getBalance } from '@neardefi/shade-agent-js';
+import { Hono } from 'hono';
 
 const app = new Hono();
 

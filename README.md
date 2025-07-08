@@ -5,7 +5,7 @@
 
 This is a monorepo template for the Shade Agent Sadnbox with all the code and tools for deploying a Shade Agent on NEAR and Phala Cloud.
 
-This template is a simple verifiable ETH Price Oracle that pushes prices to an Ethereum contract. 
+This template is a simple verifiable ETH Price Oracle that pushes prices to an Ethereum contract.
 
 For full instructions on this repository please refer to our [docs](https://docs.near.org/ai/shade-agents/sandbox/sandbox-deploying).
 
@@ -23,9 +23,6 @@ cd shade-agent
 ```bash
 # Install the NEAR CLI
 curl --proto '=https' --tlsv1.2 -LsSf https://github.com/near/near-cli-rs/releases/latest/download/near-cli-rs-installer.sh | sh
-
-# Install the Shade Agent CLI
-npm i -g @neardefi/shade-agent-cli
 
 # Install the Phala Cloud CLI
 npm install -g phala
@@ -74,16 +71,16 @@ open -a Docker
 - In one terminal, run the Shade Agent CLI:
 
 ```bash
-shade-agent-cli
+bun run deploy
 ```
 
-The CLI will prompt you to enter your `sudo password`. 
+The CLI will prompt you to enter your `sudo password`.
 
-- In another terminal, start the frontend :
+- In another terminal, start the development :
 
 ```bash
 bun install
-bun start
+bun run dev
 ```
 
 ---
@@ -95,13 +92,13 @@ bun start
 - Run the Shade Agent CLI
 
 ```bash
-shade-agent-cli
+bun run deploy
 ```
 
 The CLI will prompt you to enter your `sudo password`. 
 
 This command will take about 5 minutes to complete.
 
-- Head over to your Phala Cloud dashboard https://cloud.phala.network/dashboard
+- Head over to your Phala Cloud dashboard <https://cloud.phala.network/dashboard>
 
 - Once the deployment is finished, click on your deployment, then head to the `network tab` and open the endpoint that is running on `port 3000`.
