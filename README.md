@@ -1,104 +1,44 @@
-# Shade Agent Template
+# Tapestry Proxy Agent
 
 > [!WARNING]  
 > This technology has not yet undergone a formal audit. Use at your own risk. Please conduct your own due diligence and exercise caution before integrating or relying on it in production environments.
 
-This is a monorepo template for the Shade Agent Sadnbox with all the code and tools for deploying a Shade Agent on NEAR and Phala Cloud.
+This repository contains a proxy server designed for deployment to a Trusted Execution Environment (TEE). The server accepts NEAR signatures from the [playground UI](./playground/), verifies them using [near-sign-verify](https://github.com/elliotBraem/near-sign-verify), and subsequently creates a Solana account controlled by Multi-Party Computation (MPC) to leverage the [Tapestry SDK](https://docs.usetapestry.dev/).
 
-This template is a simple verifiable ETH Price Oracle that pushes prices to an Ethereum contract.
-
-For full instructions on this repository please refer to our [docs](https://docs.near.org/ai/shade-agents/sandbox/sandbox-deploying).
-
-## Prerequisites
-
-- First, `clone` this template.
-
-```bash
-git clone https://github.com/NearDeFi/shade-agent-sandbox-template shade-agent
-cd shade-agent
-```
-
-- Install NEAR and Shade Agent tooling:
-
-```bash
-# Install the NEAR CLI
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/near/near-cli-rs/releases/latest/download/near-cli-rs-installer.sh | sh
-
-# Install the Phala Cloud CLI
-npm install -g phala
-```
-
-If you already have the NEAR CLI installed, check that you have the `most recent version`.
-
-- Create a `NEAR testnet account` and record the account name and `seed phrase`:
-
-```bash
-near account create-account sponsor-by-faucet-service <example-name.testnet> autogenerate-new-keypair print-to-terminal network-config testnet create
-```
-
-- Install Docker for [Mac](https://docs.docker.com/desktop/setup/install/mac-install/) or [Linux](https://docs.docker.com/desktop/setup/install/linux/) and set up an account.
-
-- Set up a free Phala Cloud account at https://cloud.phala.network/register then get an API key from https://cloud.phala.network/dashboard/tokens.
-
-What is a Phala Cloud?
-
-Phala Cloud is a service that offers secure and private hosting in a TEE using [Dstack](https://docs.phala.network/overview/phala-network/dstack). Phala Cloud makes it easy to run a TEE, that's why we use it in our template!
-
----
+This implementation is an extension of the [Shade Agent Sandbox](https://docs.near.org/ai/shade-agents/sandbox/sandbox-deploying).
 
 ## Local Development
 
-- Rename the `.env.development.local.example` file name to `.env.development.local` and configure your environment variables.
+1.  **Configure Environment:**
+    Rename `.env.development.local.example` to `.env.development.local` and populate it with your environment variables.
 
-- Start up Docker:
+2.  **Initialize Repository:**
+    The following command will prompt for your `sudo password` to configure the necessary host entries.
+    ```bash
+    bun run init
+    ```
 
-For Linux
-
-```bash
-sudo systemctl start docker
-```
-
-For Mac
-
-Simply open the Docker Desktop application or run: 
-
-```bash
-open -a Docker
-```
-
-- Make sure the `NEXT_PUBLIC_contractId` prefix is set to `ac.proxy.` followed by your NEAR accountId.
-
-- In one terminal, run the Shade Agent CLI:
-
-```bash
-bun run deploy
-```
-
-The CLI will prompt you to enter your `sudo password`.
-
-- In another terminal, start the development :
-
-```bash
-bun install
-bun run dev
-```
+3.  **Start Development Server:**
+    In a new terminal, install dependencies and launch the development server.
+    ```bash
+    bun install
+    bun run dev
+    ```
 
 ---
 
 ## TEE Deployment 
 
-- Change the `NEXT_PUBLIC_contractId` prefix to `ac.sandbox.` followed by your NEAR accountId.
+1.  **Configure Contract ID:**
+    In your environment settings, update the `NEXT_PUBLIC_contractId` to be prefixed with `ac.sandbox.` followed by your NEAR account ID.
 
-- Run the Shade Agent CLI
+2.  **Deploy to TEE:**
+    This command initiates the deployment to the Phala TEE. You will be prompted for your `sudo password`, and the process takes approximately 5 minutes.
+    ```bash
+    bun run deploy
+    ```
 
-```bash
-bun run deploy
-```
-
-The CLI will prompt you to enter your `sudo password`. 
-
-This command will take about 5 minutes to complete.
-
-- Head over to your Phala Cloud dashboard <https://cloud.phala.network/dashboard>
-
-- Once the deployment is finished, click on your deployment, then head to the `network tab` and open the endpoint that is running on `port 3000`.
+3.  **Access Your Deployment:**
+    -   Navigate to your Phala Cloud dashboard at [cloud.phala.network/dashboard](https://cloud.phala.network/dashboard).
+    -   After the deployment completes, select your deployment.
+    -   Open the `Network` tab and access the endpoint running on port `3000`.
