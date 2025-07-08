@@ -76,6 +76,14 @@ app.all("*", async (c) => {
 
   try {
     const headers = new Headers(c.req.raw.headers);
+    const upstreamUrl = new URL(UPSTREAM_API_BASE_URL);
+
+    // Set Host header for the upstream request
+    headers.set("Host", upstreamUrl.hostname);
+    
+    // Remove the Origin header from the incoming request
+    headers.delete("Origin");
+    
     // Remove the incoming Authorization header (already verified)
     headers.delete("Authorization");
 
