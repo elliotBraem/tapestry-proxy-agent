@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { Hono } from 'hono';
 import { logger } from 'hono/logger';
+import { proxy } from 'hono/proxy';
 import { verify } from 'near-sign-verify';
 import { solanaAdapter } from './chains/sol/adapter';
 import { protectedRoutes, publicRoutes } from './routes/v1';
@@ -56,71 +57,48 @@ app.all("*", async (c) => {
     return c.json({ error: "Server configuration error" }, 500);
   }
 
-  const url = new URL(c.req.url); // Parse the incoming URL from the client
-  const incomingPath = url.pathname; // e.g., /profiles/findOrCreate
-  const incomingQuery = url.search; // e.g., ?param1=value1&param2=value2 (may be empty)
+  const url = new URL(c.req.url);
+  const incomingPath = url.pathname;
+  const incomingQuery = url.search;
 
-  // Construct the new query string, adding the INTERNAL_API_KEY
   let newQuery = incomingQuery;
   if (newQuery.length === 0) {
     newQuery = `?apiKey=${INTERNAL_API_KEY}`;
   } else {
-    // If there are existing query params, append the apiKey
     newQuery = `${newQuery}&apiKey=${INTERNAL_API_KEY}`;
   }
 
-  // Construct the target URL for the upstream API with the injected apiKey
   const targetUrl = `${UPSTREAM_API_BASE_URL}${incomingPath}${newQuery}`;
-
   console.log(`Proxying: ${c.req.method} ${incomingPath}${incomingQuery} -> ${targetUrl}`);
 
-  try {
-    const headers = new Headers(c.req.raw.headers);
-    const upstreamUrl = new URL(UPSTREAM_API_BASE_URL);
+  const upstreamUrl = new URL(UPSTREAM_API_BASE_URL);
 
-    // Set Host header for the upstream request
-    headers.set("Host", upstreamUrl.hostname);
+  let body: string | undefined;
+  const headers: Record<string, string | undefined> = {
+    ...c.req.header(),
+    Host: upstreamUrl.hostname,
+    Origin: undefined,
+    Authorization: undefined,
+  };
+
+  if (c.req.method !== "GET" && c.req.method !== "HEAD") {
+    const originalBody = await c.req.json();
+    const accountId = c.get('accountId');
+    const { address } = await solanaAdapter.deriveAddress(accountId);
     
-    // Remove the Origin header from the incoming request
-    headers.delete("Origin");
-    
-    // Remove the incoming Authorization header (already verified)
-    headers.delete("Authorization");
-
-    let body = c.req.method !== "GET" && c.req.method !== "HEAD" ? await c.req.json() : undefined;
-
-    if (body) {
-      const accountId = c.get('accountId');
-      const { address } = await solanaAdapter.deriveAddress(accountId);
-      body.walletAddress = address;
-      body.blockchain = 'SOLANA';
-    }
-
-    const fetchOptions: BunFetchRequestInit = {
-      method: c.req.method,
-      headers: headers,
-      // Pass the original request body for non-GET/HEAD requests
-      body: c.req.method !== "GET" && c.req.method !== "HEAD" ? JSON.stringify(body) : undefined,
-      signal: AbortSignal.timeout(15000) // 15 second timeout
-    };
-
-    const upstreamResponse = await fetch(targetUrl, fetchOptions);
-
-    const responseHeaders = new Headers();
-    upstreamResponse.headers.forEach((value, name) => {
-      responseHeaders.set(name, value);
+    body = JSON.stringify({
+      ...originalBody,
+      walletAddress: address,
+      blockchain: 'SOLANA',
     });
-
-    return new Response(upstreamResponse.body, {
-      status: upstreamResponse.status,
-      statusText: upstreamResponse.statusText,
-      headers: responseHeaders,
-    });
-
-  } catch (error: any) {
-    console.error("Proxying failed:", error.message);
-    return c.json({ error: "Proxying failed or upstream unavailable" }, 500);
+    headers['content-type'] = 'application/json';
   }
+
+  return proxy(targetUrl, {
+    method: c.req.method,
+    headers,
+    body,
+  });
 });
 
 
