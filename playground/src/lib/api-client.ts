@@ -1,3 +1,6 @@
+import * as wallet from "fastintear";
+import { sign } from "near-sign-verify";
+
 export class ApiError extends Error {
   public status?: number;
   public data?: unknown;
@@ -31,9 +34,19 @@ class ApiClient {
     const headers: Record<string, string> = {
       Accept: "application/json",
     };
+
+    const contractId = import.meta.env.VITE_SHADE_AGENT_CONTRACT_ID;
+
+    const token = await sign("login attempt", {
+      signer: wallet,
+      recipient: contractId,
+    });
+
     if (method !== "GET" && method !== "DELETE" && requestData) {
       headers["Content-Type"] = "application/json";
+      headers["Authorization"] = `Bearer ${token}`;
     }
+
 
     const requestOptions: RequestInit = {
       method,

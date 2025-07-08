@@ -1,4 +1,4 @@
-import { EthPrice } from "@/components/eth-price";
+import { TapestryProxy } from "@/components/tapestry-proxy";
 import { useWorker } from "@/contexts/worker-context";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -12,7 +12,8 @@ function RouteComponent() {
   return (
     <div className="w-full max-w-2xl mx-auto">
       <div className="grid grid-cols-1 gap-6">
-        <EthPrice />
+        {/* <EthPrice /> */}
+        <TapestryProxy />
       </div>
 
       {error && (
