@@ -23,11 +23,9 @@ export function TapestryProxy() {
         "POST",
         "/profiles/findOrCreate",
         {
-          walletAddress: currentAccountId,
           username: currentAccountId,
           id: '', // can be blank
           bio: 'User bio here',
-          blockchain: 'SOLANA',
           execution: 'FAST_UNCONFIRMED',
           customProperties: [
             {

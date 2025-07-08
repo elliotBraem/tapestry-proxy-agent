@@ -7,7 +7,7 @@
     "init:playground": "cd playground && bun install",
     "init:docker": "shade-agent-cli",
     "dev": "npm-run-all --parallel dev:*",
-    "dev:backend": "NODE_TLS_REJECT_UNAUTHORIZED=0 NODE_DEBUG=tls bun --watch src/index.ts",
+    "dev:backend": "bun --watch src/index.ts",
     "dev:playground": "cd playground && bun run dev",
     "start": "bun src/index.ts",
     "deploy": "shade-agent-cli",

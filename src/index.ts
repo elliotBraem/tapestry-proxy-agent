@@ -2,9 +2,8 @@ import 'dotenv/config';
 import { Hono } from 'hono';
 import { logger } from 'hono/logger';
 import { verify } from 'near-sign-verify';
-// import { protectedRoutes, publicRoutes } from './routes/v1';
-
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+import { solanaAdapter } from './chains/sol/adapter';
+import { protectedRoutes, publicRoutes } from './routes/v1';
 
 const UPSTREAM_API_BASE_URL =
   process.env.UPSTREAM_API_BASE_URL || "https://api.usetapestry.dev/api/v1";
@@ -17,6 +16,11 @@ type Variables = {
 const app = new Hono<{ Variables: Variables }>();
 
 app.use('*', logger());
+
+app.get('/', (c) => {
+  return c.text(`Shade Agent: ${process.env.NEXT_PUBLIC_contractId}`);
+});
+app.route('/v1', publicRoutes);
 
 app.use('*', async (c, next) => {
   const authHeader = c.req.header('Authorization');
@@ -42,9 +46,7 @@ app.use('*', async (c, next) => {
   await next();
 });
 
-app.get('/', (c) => {
-  return c.text(`Shade Agent: ${process.env.NEXT_PUBLIC_contractId}`);
-});
+app.route('/v1', protectedRoutes);
 
 // --- Middleware: Forward `?apiKey=` to tapestry ---
 app.all("*", async (c) => {
@@ -77,17 +79,21 @@ app.all("*", async (c) => {
     // Remove the incoming Authorization header (already verified)
     headers.delete("Authorization");
 
+    let body = c.req.method !== "GET" && c.req.method !== "HEAD" ? await c.req.json() : undefined;
+
+    if (body) {
+      const accountId = c.get('accountId');
+      const { address } = await solanaAdapter.deriveAddress(accountId);
+      body.walletAddress = address;
+      body.blockchain = 'SOLANA';
+    }
+
     const fetchOptions: BunFetchRequestInit = {
       method: c.req.method,
       headers: headers,
       // Pass the original request body for non-GET/HEAD requests
-      body: JSON.stringify({ test: "data" }),
-      tls: {
-        rejectUnauthorized: false
-      }
-      // body: c.req.method !== "GET" && c.req.method !== "HEAD" ? c.req.raw.body : undefined,
-      // rejectUnauthorized: false as any,
-      // signal: AbortSignal.timeout(15000) // 15 second timeout
+      body: c.req.method !== "GET" && c.req.method !== "HEAD" ? JSON.stringify(body) : undefined,
+      signal: AbortSignal.timeout(15000) // 15 second timeout
     };
 
     const upstreamResponse = await fetch(targetUrl, fetchOptions);
@@ -108,9 +114,6 @@ app.all("*", async (c) => {
     return c.json({ error: "Proxying failed or upstream unavailable" }, 500);
   }
 });
-
-// app.route('/v1', publicRoutes);
-// app.route('/v1', protectedRoutes);
 
 
 const port = 3000;
