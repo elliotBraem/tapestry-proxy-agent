@@ -1,6 +1,6 @@
-import { contracts, chainAdapters } from "chainsig.js";
 import { getFullnodeUrl, SuiClient } from '@mysten/sui/client';
 import { Transaction } from '@mysten/sui/transactions';
+import { chainAdapters, contracts } from "chainsig.js";
 import type { ChainAdapter } from "../types";
 
 const MPC_CONTRACT = new contracts.ChainSignatureContract({
@@ -12,9 +12,9 @@ const rpcUrl = getFullnodeUrl('testnet');
 const suiClient = new SuiClient({ url: rpcUrl });
 
 const Sui = (new chainAdapters.sui.SUI({
-    contract: MPC_CONTRACT,
-    client: suiClient,
-    rpcUrl,
+  contract: MPC_CONTRACT,
+  client: suiClient,
+  rpcUrl,
 }));
 
 class SuiAdapter implements ChainAdapter {
@@ -41,7 +41,7 @@ class SuiAdapter implements ChainAdapter {
     return { transaction, hashesToSign };
   }
 
-  async broadcastTransaction(signedTransaction: any): Promise<{ txHash:string; }> {
+  async broadcastTransaction(signedTransaction: any): Promise<{ txHash: string; }> {
     const txHash = await Sui.broadcastTx(signedTransaction);
     return { txHash: txHash.hash };
   }
